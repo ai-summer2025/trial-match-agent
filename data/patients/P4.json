@@ -1,0 +1,14 @@
+{
+ "id": "P4",
+ "age": 55,
+ "sex": "male",
+ "conditions": [
+  "non-small cell lung cancer"
+ ],
+ "labs": {
+  "anc": 1.2,
+  "platelets": 150,
+  "hemoglobin": 11.0
+ },
+ "ecog": 2
+}

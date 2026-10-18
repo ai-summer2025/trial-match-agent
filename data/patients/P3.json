@@ -1,0 +1,15 @@
+{
+ "id": "P3",
+ "age": 61,
+ "sex": "female",
+ "conditions": [
+  "non-small cell lung cancer, stage IV"
+ ],
+ "labs": {
+  "anc": 2.1,
+  "platelets": 180,
+  "hemoglobin": 10.2
+ },
+ "ecog": 1,
+ "pregnant": false
+}

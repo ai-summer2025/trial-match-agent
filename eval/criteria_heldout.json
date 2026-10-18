@@ -1,0 +1,18 @@
+[
+ {"text": "Glycated hemoglobin of 6.5% to 9.0% at screening", "kind": "inclusion", "type": "lab", "lab": "hba1c", "low": 6.5, "high": 9.0},
+ {"text": "Estimated glomerular filtration rate (eGFR) >= 60", "kind": "inclusion", "type": "lab", "lab": "egfr", "low": 60.0, "high": null},
+ {"text": "Platelet count of at least 75 x 10^9/L", "kind": "inclusion", "type": "lab", "lab": "platelets", "low": 75.0, "high": null},
+ {"text": "ANC >= 1.0 x 10^9/L", "kind": "inclusion", "type": "lab", "lab": "anc", "low": 1.0, "high": null},
+ {"text": "BMI 18.5 to 40 kg/m2", "kind": "inclusion", "type": "lab", "lab": "bmi", "low": 18.5, "high": 40.0},
+ {"text": "Left ventricular ejection fraction of 35% or less", "kind": "inclusion", "type": "lab", "lab": "lvef", "low": null, "high": 35.0},
+ {"text": "AST or ALT > 2.5 times ULN", "kind": "exclusion", "type": "unparsed"},
+ {"text": "Karnofsky performance status of at least 70", "kind": "inclusion", "type": "unparsed"},
+ {"text": "ECOG 0, 1 or 2", "kind": "inclusion", "type": "ecog", "low": 0.0, "high": 2.0},
+ {"text": "Currently pregnant, planning pregnancy, or nursing", "kind": "exclusion", "type": "pregnancy"},
+ {"text": "Known HIV infection", "kind": "exclusion", "type": "condition"},
+ {"text": "Prior myocardial infarction within 6 months", "kind": "exclusion", "type": "condition"},
+ {"text": "Able and willing to complete study diaries", "kind": "inclusion", "type": "unparsed"},
+ {"text": "Hemoglobin < 8 g/dL", "kind": "exclusion", "type": "lab", "lab": "hemoglobin", "low": null, "high": 8.0},
+ {"text": "Serum creatinine > 2.0 mg/dL", "kind": "exclusion", "type": "lab", "lab": "creatinine", "low": 2.0, "high": null},
+ {"text": "Documented diagnosis of rheumatoid arthritis per ACR/EULAR 2010 criteria", "kind": "inclusion", "type": "condition"}
+]

@@ -1,0 +1,193 @@
+{
+ "_note": "SYNTHETIC records in ClinicalTrials.gov API v2 shape. Not real trials.",
+ "studies": [
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "SYNTH0001",
+     "briefTitle": "Synthetic glycemic control study in type 2 diabetes"
+    },
+    "statusModule": {
+     "overallStatus": "RECRUITING"
+    },
+    "conditionsModule": {
+     "conditions": [
+      "Type 2 Diabetes Mellitus"
+     ]
+    },
+    "eligibilityModule": {
+     "eligibilityCriteria": "Inclusion Criteria:\n\n* Diagnosis of type 2 diabetes mellitus\n* HbA1c between 7.0% and 10.5%\n* eGFR ≥ 45 mL/min/1.73m2\n* Body mass index ≥ 25 kg/m2\n\nExclusion Criteria:\n\n* Type 1 diabetes\n* History of pancreatitis\n* Pregnant or breastfeeding\n* ALT > 3 x upper limit of normal\n* Unable to provide informed consent",
+     "sex": "ALL",
+     "minimumAge": "18 Years",
+     "maximumAge": "75 Years"
+    },
+    "contactsLocationsModule": {
+     "locations": [
+      {
+       "facility": "Synthetic Research Site",
+       "city": "Springfield",
+       "state": "IL",
+       "country": "United States"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "SYNTH0002",
+     "briefTitle": "Synthetic outcomes study in heart failure with reduced ejection fraction"
+    },
+    "statusModule": {
+     "overallStatus": "RECRUITING"
+    },
+    "conditionsModule": {
+     "conditions": [
+      "Heart Failure"
+     ]
+    },
+    "eligibilityModule": {
+     "eligibilityCriteria": "Inclusion Criteria:\n\n* Diagnosis of heart failure\n* LVEF ≤ 40%\n* eGFR ≥ 30 mL/min/1.73m2\n\nExclusion Criteria:\n\n* Systolic blood pressure < 90 mmHg at screening\n* Heart transplant recipient\n* Life expectancy under 1 year in the investigator's judgment",
+     "sex": "ALL",
+     "minimumAge": "40 Years"
+    },
+    "contactsLocationsModule": {
+     "locations": [
+      {
+       "facility": "Synthetic Research Site",
+       "city": "Springfield",
+       "state": "IL",
+       "country": "United States"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "SYNTH0003",
+     "briefTitle": "Synthetic first-line immunotherapy study in advanced NSCLC"
+    },
+    "statusModule": {
+     "overallStatus": "RECRUITING"
+    },
+    "conditionsModule": {
+     "conditions": [
+      "Non-small Cell Lung Cancer"
+     ]
+    },
+    "eligibilityModule": {
+     "eligibilityCriteria": "Inclusion Criteria:\n\n* Histologically confirmed non-small cell lung cancer\n* ECOG performance status 0-1\n* Absolute neutrophil count ≥ 1,500/mm³\n* Platelets ≥ 100,000/mm³\n* Hemoglobin ≥ 9.0 g/dL\n\nExclusion Criteria:\n\n* Active brain metastases\n* Prior treatment with a PD-1 inhibitor\n* Active autoimmune disease requiring systemic treatment",
+     "sex": "ALL",
+     "minimumAge": "18 Years"
+    },
+    "contactsLocationsModule": {
+     "locations": [
+      {
+       "facility": "Synthetic Research Site",
+       "city": "Springfield",
+       "state": "IL",
+       "country": "United States"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "SYNTH0004",
+     "briefTitle": "Synthetic study in moderate chronic kidney disease"
+    },
+    "statusModule": {
+     "overallStatus": "RECRUITING"
+    },
+    "conditionsModule": {
+     "conditions": [
+      "Chronic Kidney Disease"
+     ]
+    },
+    "eligibilityModule": {
+     "eligibilityCriteria": "Inclusion Criteria:\n\n* Chronic kidney disease\n* eGFR between 20 and 60 mL/min/1.73m2\n\nExclusion Criteria:\n\n* Kidney transplant\n* Currently on dialysis",
+     "sex": "ALL",
+     "minimumAge": "18 Years",
+     "maximumAge": "80 Years"
+    },
+    "contactsLocationsModule": {
+     "locations": [
+      {
+       "facility": "Synthetic Research Site",
+       "city": "Springfield",
+       "state": "IL",
+       "country": "United States"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "SYNTH0005",
+     "briefTitle": "Synthetic bone density study in postmenopausal osteoporosis"
+    },
+    "statusModule": {
+     "overallStatus": "RECRUITING"
+    },
+    "conditionsModule": {
+     "conditions": [
+      "Osteoporosis, Postmenopausal"
+     ]
+    },
+    "eligibilityModule": {
+     "eligibilityCriteria": "Inclusion Criteria:\n\n* Postmenopausal women with osteoporosis\n* T-score ≤ -2.5 at the lumbar spine or femoral neck\n\nExclusion Criteria:\n\n* Bisphosphonate use within the past 12 months",
+     "sex": "FEMALE",
+     "minimumAge": "50 Years"
+    },
+    "contactsLocationsModule": {
+     "locations": [
+      {
+       "facility": "Synthetic Research Site",
+       "city": "Springfield",
+       "state": "IL",
+       "country": "United States"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "SYNTH0006",
+     "briefTitle": "Synthetic completed study in type 2 diabetes"
+    },
+    "statusModule": {
+     "overallStatus": "COMPLETED"
+    },
+    "conditionsModule": {
+     "conditions": [
+      "Type 2 Diabetes Mellitus"
+     ]
+    },
+    "eligibilityModule": {
+     "eligibilityCriteria": "Inclusion Criteria:\n\n* Type 2 diabetes\n\nExclusion Criteria:\n\n* None",
+     "sex": "ALL",
+     "minimumAge": "18 Years"
+    },
+    "contactsLocationsModule": {
+     "locations": [
+      {
+       "facility": "Synthetic Research Site",
+       "city": "Springfield",
+       "state": "IL",
+       "country": "United States"
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

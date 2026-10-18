@@ -1,0 +1,16 @@
+{
+ "id": "P2",
+ "age": 67,
+ "sex": "male",
+ "conditions": [
+  "heart failure with reduced ejection fraction",
+  "chronic kidney disease stage 3b",
+  "type 2 diabetes"
+ ],
+ "labs": {
+  "lvef": 30,
+  "egfr": 38,
+  "hba1c": 7.4,
+  "bmi": 29
+ }
+}

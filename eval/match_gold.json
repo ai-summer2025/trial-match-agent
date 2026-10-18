@@ -1,0 +1,42 @@
+{
+ "P1": {
+  "SYNTH0001": "likely_eligible",
+  "SYNTH0002": "ineligible",
+  "SYNTH0003": "ineligible",
+  "SYNTH0004": "ineligible",
+  "SYNTH0005": "ineligible",
+  "SYNTH0006": "ineligible"
+ },
+ "P2": {
+  "SYNTH0001": "ineligible",
+  "SYNTH0002": "likely_eligible",
+  "SYNTH0003": "ineligible",
+  "SYNTH0004": "likely_eligible",
+  "SYNTH0005": "ineligible",
+  "SYNTH0006": "ineligible"
+ },
+ "P3": {
+  "SYNTH0001": "ineligible",
+  "SYNTH0002": "ineligible",
+  "SYNTH0003": "likely_eligible",
+  "SYNTH0004": "ineligible",
+  "SYNTH0005": "ineligible",
+  "SYNTH0006": "ineligible"
+ },
+ "P4": {
+  "SYNTH0001": "ineligible",
+  "SYNTH0002": "ineligible",
+  "SYNTH0003": "ineligible",
+  "SYNTH0004": "ineligible",
+  "SYNTH0005": "ineligible",
+  "SYNTH0006": "ineligible"
+ },
+ "P5": {
+  "SYNTH0001": "needs_review",
+  "SYNTH0002": "ineligible",
+  "SYNTH0003": "ineligible",
+  "SYNTH0004": "ineligible",
+  "SYNTH0005": "needs_review",
+  "SYNTH0006": "ineligible"
+ }
+}

@@ -1,0 +1,14 @@
+{
+ "id": "P5",
+ "age": 72,
+ "sex": "female",
+ "conditions": [
+  "type 2 diabetes",
+  "postmenopausal osteoporosis"
+ ],
+ "labs": {
+  "egfr": 50,
+  "bmi": 27
+ },
+ "pregnant": false
+}

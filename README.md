@@ -1,225 +1,87 @@
-# 🧬 Clinical Trial Match Agent
+# trial-match-agent
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-32%20passing-brightgreen.svg)](#testing)
-[![No Paid APIs](https://img.shields.io/badge/APIs-free%20%26%20open-orange.svg)](https://clinicaltrials.gov/data-api/api)
+[![CI](https://github.com/ai-summer2025/trial-match-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/ai-summer2025/trial-match-agent/actions/workflows/ci.yml)
+![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
-An **agentic AI system** that autonomously matches cancer patients to recruiting clinical trials using real-time data from the ClinicalTrials.gov public API — no paid API keys required.
+Clinical trial pre-screening. Pulls recruiting trials from the ClinicalTrials.gov API v2, turns each free-text eligibility criterion into a structured predicate, and checks it against a patient record with three-valued logic: **met**, **not met**, or **unknown**. Each trial gets a verdict with the criterion-by-criterion reasoning behind it.
 
----
+> **Screening aid only.** Final eligibility is determined by the study team. All bundled patients and trials are synthetic.
 
-## 🚨 The Problem
-
-- **85%** of clinical trials fail to meet enrollment targets
-- Only **3–5%** of eligible patients ever participate in a trial
-- Oncologists spend hours manually combing through thousands of trials
-- Patients miss life-extending treatments they never knew existed
-
-A single oncologist managing 50+ active patients cannot realistically evaluate 400,000+ trials on ClinicalTrials.gov by hand. The matching process demands structured reasoning: eligibility criterion parsing, age/sex checks, comorbidity filtering, and treatment history analysis.
-
----
-
-## 🤖 Architecture
-
-This is **not a chatbot wrapper**. The agent runs a deterministic 6-step autonomous loop:
+## How it works
 
 ```
-Patient Profile
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  Step 1 │ Profile Analysis   Extract conditions, demographics,  │
-│         │                   prior treatments, ECOG status       │
-│  Step 2 │ Trial Search       Query ClinicalTrials.gov API v2    │
-│         │                   with condition-specific terms       │
-│  Step 3 │ Detail Retrieval   Fetch full eligibility criteria    │
-│         │                   for each candidate trial            │
-│  Step 4 │ Eligibility Eval   Rule-based + keyword analysis:     │
-│         │                   inclusion/exclusion per criterion   │
-│  Step 5 │ Scoring & Ranking  Weighted match score (0-100)       │
-│  Step 6 │ Report Generation  Structured clinical output         │
-└─────────────────────────────────────────────────────────────────┘
-      │
-      ▼
-Ranked Match Report (text or JSON)
+ ClinicalTrials.gov v2 ──► hard filters ──► split criteria ──► parse each criterion ──► evaluate vs patient ──► verdict
+ (or a JSON file)          status, age,     inclusion /       regex baseline, or       met / not_met /        + reasons,
+                           sex, condition   exclusion         LLM with checks          unknown                 ranked
 ```
 
-### Scoring Formula
-| Component | Weight | Signal |
-|-----------|--------|--------|
-| Inclusion criteria met | +60% | Higher = better |
-| Inclusion criteria not met | −40% | Lower = better |
-| Exclusion criteria clear | +40% | Higher = better |
-| Exclusion criteria triggered | −30% | Lower = better |
+**Verdicts**
 
-Patients who fail basic checks (age out of range, wrong sex for trial) receive a score of **0** and are excluded from the report.
+| Verdict | Meaning |
+|---|---|
+| `likely_eligible` | Nothing blocks. Criteria the tool cannot evaluate (consent, investigator judgment) are listed for the coordinator. |
+| `needs_review` | An inclusion criterion could not be checked because the patient record lacks the data (e.g. no HbA1c). |
+| `ineligible` | A hard filter failed or a criterion is clearly not met, with the reason. |
 
----
+**Design choices**
 
-## 📁 Project Structure
+- **Unknown is a first-class answer.** A missing lab never silently passes or fails; it produces `needs_review` and names the missing value.
+- **The LLM parses criteria; it does not decide eligibility.** Its output is checked: every threshold it returns must literally appear in that criterion's text, and lab names must be from a fixed vocabulary. Anything that fails the check stays `unparsed` and goes to human review.
+- **Exclusion logic is explicit.** For an exclusion like "Hemoglobin < 8 g/dL" the range describes who is excluded; for exclusion diagnoses, absence from the record is reported as "verify", not as a confirmed negative.
+- **Units are normalized** (e.g. "≥ 100,000/mm³" platelets → 100 x10⁹/L), and ULN-relative thresholds ("> 3 x ULN") are left for review rather than guessed.
+- **API errors propagate.** A failed ClinicalTrials.gov request is an error, never an empty result or placeholder data.
 
-```
-clinical-trial-match-agent/
-├── agent.py          # Main agentic loop (6-step pipeline)
-├── patient.py        # PatientProfile dataclass + sample patients
-├── tools.py          # Agent tools: search, fetch, parse, evaluate
-├── report.py         # Report generation (text + JSON)
-├── test_main.py      # 32 unit tests covering all core logic
-├── requirements.txt  # Dependencies (just requests)
-└── README.md
-```
-
----
-
-## ⚙️ Installation
+## Quickstart
 
 ```bash
-git clone https://github.com/ai-summer2025/clinical-trial-match-agent
-cd clinical-trial-match-agent
-pip install -r requirements.txt
+pip install -e .
+trialmatch match data/patients/P2.json --trials data/trials/synthetic_trials.json
+trialmatch match data/patients/P2.json --search "heart failure" --max 20        # live ClinicalTrials.gov
+trialmatch match data/patients/P2.json --search "heart failure" --llm           # LLM criteria parsing
+docker build -t trialmatch . && docker run --rm trialmatch
 ```
 
-**Requirements:** Python 3.8+, `requests` — no paid API keys, no accounts needed.
-
----
-
-## 🚀 Usage
-
-### Run on a sample patient
-
-```bash
-# Match a 58-year-old female NSCLC patient (ECOG 1) — text report
-python agent.py --patient PT001 --format text
-
-# Colorectal cancer patient — JSON output, max 5 trials
-python agent.py --patient PT002 --format json --max-trials 5
-
-# Demo mode with mock data (no network required)
-python agent.py --demo --patient PT001
-```
-
-### Example output (truncated)
+Example (abridged):
 
 ```
-============================================================
-  CLINICAL TRIAL MATCH AGENT — Patient PT001
-============================================================
-
-[Step 1] Analyzing patient profile...
-[Step 2] Searching ClinicalTrials.gov for 'non-small cell lung cancer'...
-[Step 3] Retrieved details for 8 trials
-[Step 4] Evaluating eligibility for 8 trials...
-[Step 5] Scoring and ranking 8 matches...
-[Step 6] Generating report...
-
-══════════════════════════════════════════════════════
-         CLINICAL TRIAL MATCH REPORT
-══════════════════════════════════════════════════════
-Patient: PT001 | Age: 58 | Sex: Female
-Diagnosis: non-small cell lung cancer
-ECOG PS: 1 | Metastatic: Yes
-Report Date: 2026-10-02
-──────────────────────────────────────────────────────
-MATCH SUMMARY
-  Trials Evaluated:  8
-  Trials Matched:    5
-  Top Score:         78.0/100
-──────────────────────────────────────────────────────
-RANKED MATCHES
-
-  #1  NCT04892056  [Score: 78.0]
-  ✅ STRONG MATCH
-  Phase 2/3 Pembrolizumab + Chemotherapy for NSCLC
-  Sponsor: National Cancer Institute
-  
-  Inclusion criteria met (4/5):
-    ✓ Age ≥18 years
-    ✓ Histologically confirmed NSCLC
-    ✓ ECOG Performance Status 0-1
-    ✓ No prior immunotherapy
-    ? Adequate organ function (unknown)
-  
-  Exclusion triggers (0):
-    ✓ No active autoimmune disease
-    ✓ No brain metastases requiring steroids
+## Likely eligible: SYNTH0002 Synthetic outcomes study in heart failure with reduced ejection fraction
+| [x] | (inc) LVEF ≤ 40%                                         | lvef 30 vs [, 40]     |
+| [x] | (inc) eGFR ≥ 30 mL/min/1.73m2                            | egfr 38 vs [30, ]     |
+| [?] | (exc) Systolic blood pressure < 90 mmHg at screening     | requires human review |
 ```
 
-### Use as a library
+LLM configuration: `ANTHROPIC_API_KEY=...`, or `LLM_PROVIDER=openai LLM_BASE_URL=http://localhost:11434/v1 LLM_MODEL=llama3.1` for a local model. No SDK dependencies.
 
-```python
-from agent import ClinicalTrialMatchAgent
-from patient import PatientProfile
+## Evaluation
 
-patient = PatientProfile(
-    patient_id="MY001",
-    age=62,
-    sex="Male",
-    primary_diagnosis="prostate cancer",
-    ecog_performance_status=0,
-    has_metastatic_disease=True,
-    prior_treatments=["androgen deprivation therapy"],
-)
+`python eval/run_eval.py` regenerates [`eval/RESULTS.md`](eval/RESULTS.md); CI fails on regression, including any **unsafe** error (calling an ineligible patient eligible, or eligible when data is missing).
 
-agent = ClinicalTrialMatchAgent(max_trials=10, verbose=True)
-report = agent.run(patient, output_format="text")
-print(report)
-```
+| Criteria parser | Verdict accuracy (30 pairs) | Unsafe errors | Parse accuracy, dev set (24) | Parse accuracy, held-out (16) |
+|---|---|---|---|---|
+| Regex baseline | 1.00 | 0 | 1.00 | **0.75** |
+| LLM + checks | run `python eval/run_eval.py --llm` | | | |
 
----
+The held-out number is the honest one. The development criteria and the 5 x 6 patient-trial matrix were used while writing the regex parser, so they measure regressions, not generalization. The held-out criteria were written afterwards and never tuned on; the regex parser misses phrasings like "6.5% to 9.0%", "35% or less" and "ECOG 0, 1 or 2". Those are the cases the LLM parser is for. The LLM row is left for you to run with your own credentials.
 
-## 🧪 Testing
+The live API client is tested against fixtures in the API's record format; `TRIALMATCH_LIVE=1 pytest tests/test_live_api.py` runs a smoke test against the real service.
 
-```bash
-python test_main.py
-```
+## Limitations
 
-**32 tests** covering:
-- Patient profile parsing and serialization
-- Eligibility criteria parsing (inclusion/exclusion split)
-- Match scoring algorithm bounds and correctness
-- Age/sex basic eligibility checks
-- Mock data fallback integrity
-- Full agent run with mocked API (JSON + text output)
-- Empty result handling
+- Patient data is a flat record (diagnoses, a fixed set of labs, ECOG, pregnancy). Medications, procedures, biomarkers and time windows ("within 6 months") are routed to review.
+- Condition matching uses keywords or LLM-extracted phrases, not a terminology (SNOMED CT / ICD-10).
+- Synthetic evaluation only; no comparison with coordinator screening decisions.
 
-All tests run **offline** — no network access required.
+## Roadmap
 
----
+- FHIR R4 patient input (`Condition`, `Observation`, `MedicationStatement`) and SNOMED/ICD-10 condition matching
+- Time-window criteria and medication-based criteria
+- Evaluation against real trial criteria with coordinator-labeled eligibility (e.g. public TREC Clinical Trials track topics)
 
-## 📊 Impact Potential
+## Project history
 
-| Metric | Current State | With Agent |
-|--------|--------------|-----------|
-| Time to screen 100 trials | 4–8 hours (manual) | ~30 seconds |
-| Criteria checked per trial | 5–10 (fatigue) | All criteria |
-| Audit trail | None | Structured JSON |
-| Replicability | Subjective | Deterministic |
+Consolidates five earlier prototypes (`clinical-trial-match-agent`, `clinical-trial-matcher-agent`, `clinical-trial-screener`, `clinical-trial-scout`, `multiagent-trial-screener`). One notable fix: the earlier `clinical-trial-match-agent` silently replaced a failed API call with built-in mock trials whose IDs looked like real NCT numbers, so a network error could show patients trials that do not exist. See [CHANGELOG.md](CHANGELOG.md).
 
----
+## License
 
-## 🔌 Data Source
-
-All trial data comes from **[ClinicalTrials.gov v2 API](https://clinicaltrials.gov/data-api/api)** — a free, public, no-key-required REST API maintained by the U.S. National Library of Medicine. The system gracefully falls back to mock data when the API is unavailable.
-
----
-
-## ⚠️ Disclaimer
-
-This tool is for **research and demonstration purposes only**. It does not constitute medical advice. All clinical trial eligibility determinations must be made by a licensed physician who has reviewed the full protocol and the patient's complete medical history.
-
----
-
-## 🤝 Contributing
-
-PRs welcome. Areas for improvement:
-- NLP-based criterion parsing (replace keyword matching)
-- FHIR R4 patient record import
-- Geographic proximity filtering
-- Biomarker/genomic matching
-
----
-
-## 📄 License
-
-MIT © 2026 ai-summer2025
+MIT. See [LICENSE](LICENSE).

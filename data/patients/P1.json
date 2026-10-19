@@ -1,0 +1,16 @@
+{
+ "id": "P1",
+ "age": 58,
+ "sex": "female",
+ "conditions": [
+  "type 2 diabetes",
+  "hypertension"
+ ],
+ "labs": {
+  "hba1c": 8.2,
+  "egfr": 72,
+  "bmi": 31,
+  "alt": 30
+ },
+ "pregnant": false
+}
